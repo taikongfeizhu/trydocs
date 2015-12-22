@@ -12,8 +12,8 @@ def run_build_mxnet(folder):
     """Run the doxygen make command in the designated folder."""
     try:
         if READTHEDOCS_BUILD:
-            subprocess.call('cd ..; cp make/readthedocs.mk config.mk', shell = True)
-            subprocess.call('cd ..; rm -rf build', shell = True)
+            subprocess.call('cp make/readthedocs.mk config.mk', shell = True)
+            subprocess.call('rm -rf build', shell = True)
         retcode = subprocess.call("cd %s; make" % folder, shell = True)
         if retcode < 0:
             sys.stderr.write("build terminated by signal %s" % (-retcode))
