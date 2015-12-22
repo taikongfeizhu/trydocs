@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Setup an AWS GPU Cluster from Stratch &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/breathe.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="mxnet">
+<meta name="keywords" content="mxnet">
+<meta name="author" content="mxnet">
+<link rel="stylesheet" href="_static/cppformat.css">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-20116650-4', 'cppformat.github.io');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body role="document">
+<nav class="navbar navbar-inverse">
+  <div class="tb-container">
+    <div class="row">
+      <div class="navbar-content">
+        
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">MXnet</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                 aria-expanded="false"> <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="http://cppformat.github.io/2.0.0/">2.0.0</a></li>
+                <li><a href="http://cppformat.github.io/1.1.0/">1.1.0</a></li>
+                <li><a href="http://cppformat.github.io/1.0.0/">1.0.0</a></li>
+              </ul>
+            </li>
+            
+              
+              <li>
+                <a href="">Contents</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Usage</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">API</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Syntax</a>
+              </li>
+              
+            
+          </ul>
+          
+            
+<form class="navbar-form navbar-right" role="search" action="search.html" method="get">
+  <div class="form-group">
+    <input type="text" name="q" class="form-control" placeholder="Search" >
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
+</form>
+          
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</nav>
+
+
+
+<div class="tb-container">
+  <div class="row">
+    
+
+    <div class="content">
+      
+  <div class="section" id="setup-an-aws-gpu-cluster-from-stratch">
+<span id="setup-an-aws-gpu-cluster-from-stratch"></span><h1>Setup an AWS GPU Cluster from Stratch<a class="headerlink" href="#setup-an-aws-gpu-cluster-from-stratch" title="Permalink to this headline">¶</a></h1>
+<p>In this document we give a step-by-step tutorial on how to set up Amazon AWS for
+MXNet. In particular, we will address:</p>
+<ul class="simple">
+<li><a class="reference external" href="#use-amazon-s3-to-host-data">Use Amazon S3 to host data</a></li>
+<li><a class="reference external" href="#setup-an-ec2-gpu-instance">Setup EC2 GPU instance with all dependencies installed</a></li>
+<li><a class="reference external" href="#build-and-run-mxnet-on-a-gpu-instance">Build and Run MXNet on a single machine</a></li>
+<li><a class="reference external" href="#setup-an-ec2-gpu-cluster">Setup an EC2 GPU cluster for distributed training</a></li>
+</ul>
+<div class="section" id="use-amazon-s3-to-host-data">
+<span id="use-amazon-s3-to-host-data"></span><h2>Use Amazon S3 to host data<a class="headerlink" href="#use-amazon-s3-to-host-data" title="Permalink to this headline">¶</a></h2>
+<p>Amazon S3 is distributed data storage, which is quite convenient for host large
+scale datasets. In order to S3, we need first to get the
+<a class="reference external" href="http://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html">AWS credentials</a>),
+which includes a <code class="docutils literal"><span class="pre">ACCESS_KEY_ID</span></code> and a <code class="docutils literal"><span class="pre">SECRET_ACCESS_KEY</span></code>.</p>
+<p>In order for MXNet to use S3, we only need to set the environment variables <code class="docutils literal"><span class="pre">AWS_ACCESS_KEY_ID</span></code> and
+<code class="docutils literal"><span class="pre">AWS_SECRET_ACCESS_KEY</span></code> properly. For example, we can add the following two lines in
+<code class="docutils literal"><span class="pre">~/.bashrc</span></code> (replace the strings with the correct ones)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>AKIAIOSFODNN7EXAMPLE
+<span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+</pre></div>
+</div>
+<p>There are several ways to upload local data to S3. One simple way is using
+<a class="reference external" href="http://s3tools.org/s3cmd">s3cmd</a>. For example:</p>
+<div class="highlight-bash"><div class="highlight"><pre>wget http://webdocs.cs.ualberta.ca/~bx3/data/mnist.zip
+unzip mnist.zip <span class="o">&amp;&amp;</span> s3cmd put t*-ubyte s3://dmlc/mnist/
+</pre></div>
+</div>
+</div>
+<div class="section" id="setup-an-ec2-gpu-instance">
+<span id="setup-an-ec2-gpu-instance"></span><h2>Setup an EC2 GPU Instance<a class="headerlink" href="#setup-an-ec2-gpu-instance" title="Permalink to this headline">¶</a></h2>
+<p>MXNet requires the following libraries</p>
+<ul class="simple">
+<li>C++ compiler with C++11 suports, such as <code class="docutils literal"><span class="pre">gcc</span> <span class="pre">&gt;=</span> <span class="pre">4.8</span></code></li>
+<li><code class="docutils literal"><span class="pre">CUDA</span></code> (<code class="docutils literal"><span class="pre">CUDNN</span></code> in optional) for GPU linear algebra</li>
+<li><code class="docutils literal"><span class="pre">BLAS</span></code> (cblas, open-blas, atblas, mkl, or others) for CPU linear algebra</li>
+<li><code class="docutils literal"><span class="pre">opencv</span></code> for image augmentations</li>
+<li><code class="docutils literal"><span class="pre">curl</span></code> and <code class="docutils literal"><span class="pre">openssl</span></code> for read/write Amazon S3</li>
+</ul>
+<p>Installing <code class="docutils literal"><span class="pre">CUDA</span></code> on EC2 instances needs a little bit efforts. Caffe has a nice
+<a class="reference external" href="https://github.com/BVLC/caffe/wiki/Install-Caffe-on-EC2-from-scratch-(Ubuntu,-CUDA-7,-cuDNN)">tutorial</a>
+on how to install CUDA 7.0 on Ubuntu 14.04 (Note: we tried CUDA 7.5 on Nov 7
+2015, but it is problematic.)</p>
+<p>The rest can be installed by the package manager. For example, on Ubuntu:</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">git</span> <span class="n">libcurl4</span><span class="o">-</span><span class="n">openssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">libatlas</span><span class="o">-</span><span class="n">base</span><span class="o">-</span><span class="n">dev</span> <span class="n">libopencv</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span><span class="o">-</span><span class="n">numpy</span>
+</pre></div>
+</div>
+<p>We provide a public Amazon Machine Images, <a class="reference external" href="https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#LaunchInstanceWizard:ami=ami-12fd8178">ami-12fd8178</a>, with the above packages installed.</p>
+</div>
+<div class="section" id="build-and-run-mxnet-on-a-gpu-instance">
+<span id="build-and-run-mxnet-on-a-gpu-instance"></span><h2>Build and Run MXNet on a GPU Instance<a class="headerlink" href="#build-and-run-mxnet-on-a-gpu-instance" title="Permalink to this headline">¶</a></h2>
+<p>The following commands build MXNet with CUDA/CUDNN, S3, and distributed
+training.</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone --recursive https://github.com/dmlc/mxnet
+<span class="nb">cd </span>mxnet<span class="p">;</span> cp make/config.mk .
+<span class="nb">echo</span> <span class="s2">&quot;USE_CUDA=1&quot;</span> &gt;&gt;config.mk
+<span class="nb">echo</span> <span class="s2">&quot;USE_CUDA_PATH=/usr/local/cuda&quot;</span> &gt;&gt;config.mk
+<span class="nb">echo</span> <span class="s2">&quot;USE_CUDNN=1&quot;</span> &gt;&gt;config.mk
+<span class="nb">echo</span> <span class="s2">&quot;USE_BLAS=atlas&quot;</span> &gt;&gt; config.mk
+<span class="nb">echo</span> <span class="s2">&quot;USE_DIST_KVSTORE = 1&quot;</span> &gt;&gt;config.mk
+<span class="nb">echo</span> <span class="s2">&quot;USE_S3=1&quot;</span> &gt;&gt;config.mk
+make -j8
+</pre></div>
+</div>
+<p>Test if every goes well, we train a convolution neural network on MNIST using GPU:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python tests/python/gpu/test_conv.py
+</pre></div>
+</div>
+<p>If the MNISt data is placed on <code class="docutils literal"><span class="pre">s3://dmlc/mnist</span></code>, we can let the program read
+the S3 data directly:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sed -i.bak <span class="s2">&quot;s!data_dir = &#39;data&#39;!data_dir = &#39;s3://dmlc/mnist&#39;!&quot;</span> tests/python/gpu/test_conv.py
+</pre></div>
+</div>
+<p>Note: We can use <code class="docutils literal"><span class="pre">sudo</span> <span class="pre">ln</span> <span class="pre">/dev/null</span> <span class="pre">/dev/raw1394</span></code> to fix the opencv error <code class="docutils literal"><span class="pre">libdc1394</span> <span class="pre">error:</span> <span class="pre">Failed</span> <span class="pre">to</span> <span class="pre">initialize</span> <span class="pre">libdc1394</span></code>.</p>
+</div>
+<div class="section" id="setup-an-ec2-gpu-cluster">
+<span id="setup-an-ec2-gpu-cluster"></span><h2>Setup an EC2 GPU Cluster<a class="headerlink" href="#setup-an-ec2-gpu-cluster" title="Permalink to this headline">¶</a></h2>
+<p>A cluster consists of multiple machines. We can use the machine with MXNet
+installed as the root machine for submitting jobs, and then launch several
+slaves machine to run the jobs. For example, launch multiple instances using a
+AMI, e.g.
+<a class="reference external" href="https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#LaunchInstanceWizard:ami=ami-12fd8178">ami-12fd8178</a>,
+with dependencies installed. There are two suggestions:</p>
+<ol class="simple">
+<li>Make all slaves&#8217; ports are accessible (same for the root) by setting <strong>type: All TCP</strong>,
+<strong>Source: Anywhere</strong> in <strong>Configure Security Group</strong></li>
+<li>Use the same <code class="docutils literal"><span class="pre">pem</span></code> as the root machine to access all slaves machine, and
+then copy the <code class="docutils literal"><span class="pre">pem</span></code> file into root machine&#8217;s <code class="docutils literal"><span class="pre">~/.ssh/id_rsa</span></code>, it all slaves
+machines are ssh-able from the root.</li>
+</ol>
+<p>Now we run the previous CNN on multiple machines. Assume we are on a working
+directory of the root machine, such as <code class="docutils literal"><span class="pre">~/train</span></code>, and MXNet is built as <code class="docutils literal"><span class="pre">~/mxnet</span></code>.</p>
+<ol class="simple">
+<li>First pack the mxnet python library into this working directory for easy
+synchronization:</li>
+</ol>
+<div class="highlight-bash"><div class="highlight"><pre>cp -r ~/mxnet/python/mxnet .
+cp ~/mxnet/lib/libmxnet.so mxnet/
+</pre></div>
+</div>
+<p>And then copy the training program:</p>
+<div class="highlight-bash"><div class="highlight"><pre>cp ~/mxnet/example/image-classification/*.py .
+</pre></div>
+</div>
+<ol class="simple">
+<li>Prepare a host file with all slaves&#8217;s private IPs. For example, <code class="docutils literal"><span class="pre">cat</span> <span class="pre">hosts</span></code></li>
+</ol>
+<div class="highlight-bash"><div class="highlight"><pre>172.30.0.172
+172.30.0.171
+</pre></div>
+</div>
+<ol class="simple">
+<li>Assume there are 2 machines, then train the CNN using 2 workers:</li>
+</ol>
+<div class="highlight-bash"><div class="highlight"><pre>../../tools/launch.py -n <span class="m">2</span> -H hosts --sync-dir /tmp/mxnet python train_mnist.py --kv-store dist_sync
+</pre></div>
+</div>
+<p>Note: Sometimes the jobs lingers at the slave machines even we pressed <code class="docutils literal"><span class="pre">Ctrl-c</span></code>
+at the root node. We can kill them by</p>
+<div class="highlight-bash"><div class="highlight"><pre>cat hosts <span class="p">|</span> xargs -I<span class="o">{}</span> ssh -o <span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no <span class="o">{}</span> <span class="s1">&#39;uname -a; pgrep python | xargs kill -9&#39;</span>
+</pre></div>
+</div>
+<p>Note: The above example is quite simple to train and therefore is not a good
+benchmark for the distributed training. We may consider other <a class="reference external" href="https://github.com/dmlc/mxnet/tree/master/example/image-classification">examples</a>.</p>
+</div>
+<div class="section" id="more-note">
+<span id="more-note"></span><h2>More NOTE<a class="headerlink" href="#more-note" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="use-multiple-data-shards">
+<span id="use-multiple-data-shards"></span><h3>Use multiple data shards<a class="headerlink" href="#use-multiple-data-shards" title="Permalink to this headline">¶</a></h3>
+<p>Usually it is common to pack dataset into multiple files, especially when we pack it distributedly. MXNet support direct loading from multiple data shards, simply put all the record files into a folder, and point the data path to the folder</p>
+</div>
+<div class="section" id="use-yarn-mpi-sge">
+<span id="use-yarn-mpi-sge"></span><h3>Use YARN, MPI, SGE<a class="headerlink" href="#use-yarn-mpi-sge" title="Permalink to this headline">¶</a></h3>
+<p>While ssh can be simple for cases when we do not have a cluster scheduling framework. MXNet is designed to be able to port to various platforms.  We also provide other scripts in <a class="reference external" href="https://github.com/dmlc/dmlc-core/tree/master/tracker">tracker</a> to run on other cluster frameworks, including Hadoop(YARN) and SGE. Your contribution is more than welcomed to provide examples to run mxnet on your favorite distributed platform.</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, mxnet developers.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+
+<script src="_static/bootstrap.min.js"></script>
+
+  </body>
+</html>

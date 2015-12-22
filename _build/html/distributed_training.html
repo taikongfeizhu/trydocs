@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Distributed Training &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/breathe.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="mxnet">
+<meta name="keywords" content="mxnet">
+<meta name="author" content="mxnet">
+<link rel="stylesheet" href="_static/cppformat.css">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-20116650-4', 'cppformat.github.io');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body role="document">
+<nav class="navbar navbar-inverse">
+  <div class="tb-container">
+    <div class="row">
+      <div class="navbar-content">
+        
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">MXnet</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                 aria-expanded="false"> <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="http://cppformat.github.io/2.0.0/">2.0.0</a></li>
+                <li><a href="http://cppformat.github.io/1.1.0/">1.1.0</a></li>
+                <li><a href="http://cppformat.github.io/1.0.0/">1.0.0</a></li>
+              </ul>
+            </li>
+            
+              
+              <li>
+                <a href="">Contents</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Usage</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">API</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Syntax</a>
+              </li>
+              
+            
+          </ul>
+          
+            
+<form class="navbar-form navbar-right" role="search" action="search.html" method="get">
+  <div class="form-group">
+    <input type="text" name="q" class="form-control" placeholder="Search" >
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
+</form>
+          
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</nav>
+
+
+
+<div class="tb-container">
+  <div class="row">
+    
+
+    <div class="content">
+      
+  <div class="section" id="distributed-training">
+<span id="distributed-training"></span><h1>Distributed Training<a class="headerlink" href="#distributed-training" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we explain how to develop distributed
+training programs in MXNet and how to run them on multiple machines.</p>
+<div class="section" id="how-to-write-a-distributed-program-on-mxnet">
+<span id="how-to-write-a-distributed-program-on-mxnet"></span><h2>How to Write a Distributed Program on MXNet<a class="headerlink" href="#how-to-write-a-distributed-program-on-mxnet" title="Permalink to this headline">¶</a></h2>
+<p>In distributed training, multiple machines work together to finish one training
+job. Writing a distributed training program in MXNet is straightforward. It provides
+a distributed key-value store named <code class="docutils literal"><span class="pre">kvstore</span></code> to hide the complexity of data
+synchronization. It provides the following functions:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">push</span></code>: Push local data, such as computed gradient, to the distributed store</li>
+<li><code class="docutils literal"><span class="pre">pull</span></code>: Pull data from the distributed store, such as the newest weight</li>
+<li><code class="docutils literal"><span class="pre">set_updater</span></code>: set an updater for the distributed store, which specify how the
+store to merge the received data, e.g. how to update the weight using the
+received gradient.</li>
+</ul>
+<p>Things are even simpler if our program have the following structure:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span>  <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ImageRecordIter</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">net</span>   <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">SoftmaxOutput</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">FeedForward</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">net</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It reads data from an image record iterator, and train a model using a symbolic
+network.  To extend it into a distributed training program, we first create a
+<code class="docutils literal"><span class="pre">kvstore</span></code> and then pass it into the function <code class="docutils literal"><span class="pre">create</span></code>. The following program
+modifies the above one from stochastic gradient descent (SGD) into distributed
+asynchronous SGD:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">kv</span>    <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">kvstore</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s">&#39;dist_sync&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">FeedForward</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">net</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">kvstore</span> <span class="o">=</span> <span class="n">kv</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To have a quick test, we can simulate a distributed environment on the local
+machine. The following command runs <code class="docutils literal"><span class="pre">train.py</span></code> using 2 worker nodes (and 2 server
+nodes) in local. More details will be given later.</p>
+<div class="highlight-bash"><div class="highlight"><pre>mxnet/tracker/dmlc_local.py -n <span class="m">2</span> -s <span class="m">2</span> python train.py
+</pre></div>
+</div>
+<div class="section" id="data-parallelization">
+<span id="data-parallelization"></span><h3>Data Parallelization<a class="headerlink" href="#data-parallelization" title="Permalink to this headline">¶</a></h3>
+<p>On the above example, each worker processes the whole training data. It is
+often not desirable for the convergence since they may compute the gradients on
+the same minibatch in an iteration and therefore there is no speedup from 1
+worker to multiple workers.</p>
+<p>This problem can be solved by data parallelization, namely each worker only
+reads a part of the data. The <code class="docutils literal"><span class="pre">kvstore</span></code> provides two functions to query the
+worker information:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">kvstore.num_workers</span></code> returns the number of workers.</li>
+<li><code class="docutils literal"><span class="pre">kvstore.rank</span></code> returns the unique rank of the current worker, which is an
+integer in [0, <code class="docutils literal"><span class="pre">kvstore.num_workers</span></code>-1].</li>
+</ul>
+<p>Furthermore, the data iterators provided in <code class="docutils literal"><span class="pre">mxnet</span></code> support to (virtually)
+partition a data into multiple parts, and only reads one part from
+it. Therefore, we can modify the above program to partition <code class="docutils literal"><span class="pre">data</span></code> into
+<code class="docutils literal"><span class="pre">num_workers</span></code> parts and ask each worker to only read one part:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">data</span> <span class="o">=</span> <span class="n">mx</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">ImageRecordIter</span><span class="p">(</span><span class="n">num_parts</span> <span class="o">=</span> <span class="n">kv</span><span class="o">.</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">part_index</span> <span class="o">=</span> <span class="n">kv</span><span class="o">.</span><span class="n">rank</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="synchronous-vs-asynchronous">
+<span id="synchronous-vs-asynchronous"></span><h3>Synchronous vs Asynchronous<a class="headerlink" href="#synchronous-vs-asynchronous" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal"><span class="pre">kvstore</span></code> provides two ways to extend the (minibatch) SGD into a distributed
+version. The first way uses the Bulk Synchronous Parallel (BSP) protocol, which
+is called <code class="docutils literal"><span class="pre">dist_sync</span></code> on MXNet. It aggregates the gradients over all workers in
+each iteration (or minibatch) before updating the weight. Assume each worker
+uses (mini-)batch size <em>b</em>, and there <em>n</em> workers in total. Then <code class="docutils literal"><span class="pre">dist_sync</span></code>
+will produce results similar to a single machine program with batch size
+<em>b × n</em>.</p>
+<p>Note that, due to the imperfect data partition, each worker may get slightly
+different size of data. To make sure each worker computes the same number of
+batches in each epoch (data pass), we need to explicitly set <code class="docutils literal"><span class="pre">epoch_size</span></code> in the
+function <code class="docutils literal"><span class="pre">create</span></code> for <code class="docutils literal"><span class="pre">dist_sync</span></code> (no needs for <code class="docutils literal"><span class="pre">dist_async</span></code>). One choice is</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="n">epoch_size</span> <span class="o">=</span> <span class="n">num_examples_in_data</span> <span class="o">/</span> <span class="n">batch_size</span> <span class="o">/</span> <span class="n">kv</span><span class="p">.</span><span class="n">num_workers</span>
+</pre></div>
+</div>
+<p>The second way uses asynchronous updating, named <code class="docutils literal"><span class="pre">dist_async</span></code>. In this protocol,
+each worker updates the weight independently with each worker. Still assume
+there are <em>n</em> workers and each worker uses batch size <em>b</em>. Then <code class="docutils literal"><span class="pre">dist_async</span></code> can
+be view as a single-machine SGD using batch size <em>b</em>, but in each iteration, it
+may use the weight several (on average <em>n</em>) iteration ago to compute the
+gradient.</p>
+<p>Which one is better often depends on several factors. In general speaking,
+<code class="docutils literal"><span class="pre">dist_async</span></code> is faster than <code class="docutils literal"><span class="pre">dist_sync</span></code> since there is no synchronization
+between workers. But <code class="docutils literal"><span class="pre">dist_sync</span></code> guarantees the convergence, namely it is equal
+to a single machine version with proper batch size. The convergence speed of
+<code class="docutils literal"><span class="pre">dist_async</span></code>, on the other hand, is still an interesting research topic.</p>
+<p>If using <code class="docutils literal"><span class="pre">dist_sync</span></code>, a server first aggregates the
+gradients from all workers and then performances updating. While if using
+<code class="docutils literal"><span class="pre">dist_async</span></code>, the server updates the weight immediately after gradients from
+any one worker are received.</p>
+<!-- ### Implementation with the parameter server --><!-- The `kvstore` is implemented by using the [parameter server](https://github.com/dmlc/ps-lite), which -->
+<!-- is a distributed framework optimized for machine learning jobs. In this -->
+<!-- framework, there are multiple worker nodes and server nodes. The architecture is shown below: --><!-- <img src=https://raw.githubusercontent.com/dmlc/web-data/master/mxnet/multi-node/ps_arch.png width=400/> --><!-- - In each iteration, a worker first reads a data batch, next **pull** the weights from the -->
+<!--   servers, and then compute the gradients and **push** them to the servers. Workers -->
+<!--   use several technologies, such as pre-fetching, multi-threads, and data filters, to -->
+<!--   reduce the I/O overhead. --><!-- - A server maintains a part of the model, and **updates** the model using the -->
+<!--   received gradients. It supports multiple data consistency models, with will be -->
+<!--   explained later. --></div>
+</div>
+<div class="section" id="launch-jobs-on-a-cluster">
+<span id="launch-jobs-on-a-cluster"></span><h2>Launch Jobs on a Cluster<a class="headerlink" href="#launch-jobs-on-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>MXNet provides several ways to launch jobs on a cluster with multiple machines,
+including by resource managers such as <code class="docutils literal"><span class="pre">Yarn</span></code> or simply via <code class="docutils literal"><span class="pre">ssh</span></code>. <a class="reference external" href="aws.md">This tutorial</a>
+gives a step-by-step example on how to setup and run jobs on a GPU cluster at
+Amazon AWS.</p>
+</div>
+<div class="section" id="machines-with-multiple-nic-network-interface-card">
+<span id="machines-with-multiple-nic-network-interface-card"></span><h2>Machines with multiple NIC (Network Interface Card)<a class="headerlink" href="#machines-with-multiple-nic-network-interface-card" title="Permalink to this headline">¶</a></h2>
+<p>For the user who&#8217;s cluster is composed of machines equipped with multiple NICs, MXNet provides a way to let you choose the NIC you want to use.
+For example, your machine is equipped with two NICs, one card&#8217;s name is &#8220;eth0 (ethernet device)&#8221;, another one is named &#8220;ib0 (infiniband device)&#8221;.
+You can choose NIC which you will by following the guide below.</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">export</span> <span class="n">DMLC_INTERFACE</span><span class="o">=</span><span class="s">&quot;ib0&quot;</span>
+</pre></div>
+</div>
+<p>or</p>
+<div class="highlight-c++"><div class="highlight"><pre><span class="k">export</span> <span class="n">DMLC_INTERFACE</span><span class="o">=</span><span class="s">&quot;eth0&quot;</span>
+</pre></div>
+</div>
+<!-- ## More Readings --><!-- - [Distributed training examples with results](https://github.com/dmlc/mxnet/tree/master/example/distributed-training) -->
+<!-- - Research papers for the parameter server: from the algorithm aspect -->
+<!--   [NIPS'14](http://www.cs.cmu.edu/~muli/file/parameter_server_nips14.pdf), from -->
+<!--   the system aspect [OSDI'14](http://www.cs.cmu.edu/~muli/file/parameter_server_osdi14.pdf) --></div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, mxnet developers.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+
+<script src="_static/bootstrap.min.js"></script>
+
+  </body>
+</html>

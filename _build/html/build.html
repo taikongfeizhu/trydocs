@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Installation Guide &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/breathe.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="mxnet">
+<meta name="keywords" content="mxnet">
+<meta name="author" content="mxnet">
+<link rel="stylesheet" href="_static/cppformat.css">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-20116650-4', 'cppformat.github.io');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body role="document">
+<nav class="navbar navbar-inverse">
+  <div class="tb-container">
+    <div class="row">
+      <div class="navbar-content">
+        
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">MXnet</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                 aria-expanded="false"> <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="http://cppformat.github.io/2.0.0/">2.0.0</a></li>
+                <li><a href="http://cppformat.github.io/1.1.0/">1.1.0</a></li>
+                <li><a href="http://cppformat.github.io/1.0.0/">1.0.0</a></li>
+              </ul>
+            </li>
+            
+              
+              <li>
+                <a href="">Contents</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Usage</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">API</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Syntax</a>
+              </li>
+              
+            
+          </ul>
+          
+            
+<form class="navbar-form navbar-right" role="search" action="search.html" method="get">
+  <div class="form-group">
+    <input type="text" name="q" class="form-control" placeholder="Search" >
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
+</form>
+          
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</nav>
+
+
+
+<div class="tb-container">
+  <div class="row">
+    
+
+    <div class="content">
+      
+  <div class="section" id="installation-guide">
+<span id="installation-guide"></span><h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Permalink to this headline">¶</a></h1>
+<p>This page gives instructions of how to build and install the mxnet package from
+scratch on various systems. It consists of two steps, first we build the shared
+library from the C++ codes (<code class="docutils literal"><span class="pre">libmxnet.so</span></code> for linux/osx and <code class="docutils literal"><span class="pre">libmxnet.dll</span></code> for
+windows). Then we install the language, e.g. Python, packages. If the
+instructions on this page do not work for you, please feel free to ask questions
+at <a class="reference external" href="https://github.com/dmlc/mxnet/issues">mxnet/issues</a>, or even better to send
+pull request if you can fix the problem.</p>
+<div class="section" id="contents">
+<span id="contents"></span><h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="#build-mxnet-library">Build the Shared Library</a><ul>
+<li><a class="reference external" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference external" href="#building-on-ubuntu-debian">Building on Ubuntu/Debian</a></li>
+<li><a class="reference external" href="#building-on-osx">Building on OSX</a></li>
+<li><a class="reference external" href="#building-on-windows">Building on Windows</a></li>
+<li><a class="reference external" href="#installing-pre-built-packages-on-windows">Installing pre-built packages on Windows</a></li>
+<li><a class="reference external" href="#customized-building">Customized Building</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#python-package-installation">Python Package Installation</a></li>
+<li><a class="reference external" href="#r-package-installation">R Package Installation</a></li>
+<li><a class="reference external" href="#docker-images">Docker Images</a></li>
+</ul>
+</div>
+<div class="section" id="build-the-shared-library">
+<span id="build-the-shared-library"></span><h2>Build the Shared Library<a class="headerlink" href="#build-the-shared-library" title="Permalink to this headline">¶</a></h2>
+<p>Our goal is to build the shared library:</p>
+<ul class="simple">
+<li>On Linux/OSX the target library is <code class="docutils literal"><span class="pre">libmxnet.so</span></code></li>
+<li>On Windows the target libary is <code class="docutils literal"><span class="pre">libmxnet.dll</span></code></li>
+</ul>
+<p>The minimal building requirement is</p>
+<ul class="simple">
+<li>A recent c++ compiler supporting C++ 11 such as <code class="docutils literal"><span class="pre">g++</span> <span class="pre">&gt;=</span> <span class="pre">4.8</span></code> or <code class="docutils literal"><span class="pre">clang</span></code></li>
+<li>A BLAS library, such as <code class="docutils literal"><span class="pre">libblas</span></code>, <code class="docutils literal"><span class="pre">libblas</span></code>, <code class="docutils literal"><span class="pre">openblas</span></code> <code class="docutils literal"><span class="pre">intel</span> <span class="pre">mkl</span></code></li>
+</ul>
+<p>Optional libraries</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">CUDA</span> <span class="pre">Toolkit</span> <span class="pre">&gt;=</span> <span class="pre">v7.0</span></code> to run on nvidia GPUs<ul>
+<li>Requires GPU with support for <code class="docutils literal"><span class="pre">Compute</span> <span class="pre">Capability</span> <span class="pre">&gt;=</span> <span class="pre">2.0</span></code></li>
+</ul>
+</li>
+<li>CUDNN to accelerate the GPU computation (only CUDNN 3 is supported)</li>
+<li>opencv for image augmentation</li>
+</ul>
+<p>We can edit <code class="docutils literal"><span class="pre">make/config.mk</span></code> to change the compile options, and then build by
+<code class="docutils literal"><span class="pre">make</span></code>. If everything goes well, we can go the
+<a class="reference external" href="#install-language-packages">language package installation</a> step.</p>
+<p>On the remaining of this section, we provide instructions to install the
+dependencies and build mxnet from scratch for various systems.</p>
+<div class="section" id="building-on-ubuntu-debian">
+<span id="building-on-ubuntu-debian"></span><h3>Building on Ubuntu/Debian<a class="headerlink" href="#building-on-ubuntu-debian" title="Permalink to this headline">¶</a></h3>
+<p>On Ubuntu &gt;= 13.10, one can install the dependencies by</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get update
+sudo apt-get install -y build-essential git libatlas-base-dev libopencv-dev
+</pre></div>
+</div>
+<p>Then build mxnet</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone --recursive https://github.com/dmlc/mxnet
+<span class="nb">cd </span>mxnet<span class="p">;</span> make -j4
+</pre></div>
+</div>
+</div>
+<div class="section" id="building-on-osx">
+<span id="building-on-osx"></span><h3>Building on OSX<a class="headerlink" href="#building-on-osx" title="Permalink to this headline">¶</a></h3>
+<p>On OSX, we can install the dependencies by</p>
+<div class="highlight-bash"><div class="highlight"><pre>brew update
+brew tap homebrew/science
+brew info opencv
+brew install opencv
+</pre></div>
+</div>
+<p>Then build mxnet</p>
+<div class="highlight-bash"><div class="highlight"><pre>git clone --recursive https://github.com/dmlc/mxnet
+<span class="nb">cd </span>mxnet<span class="p">;</span> cp make/osx.mk ./config.mk<span class="p">;</span> make -j4
+</pre></div>
+</div>
+<p>Troubleshooting:</p>
+<p>Some of the users might meet the link error <code class="docutils literal"><span class="pre">ld:</span> <span class="pre">library</span> <span class="pre">not</span> <span class="pre">found</span> <span class="pre">for</span> <span class="pre">-lgomp</span></code>, indicating that the GNU implementation of OpenMP is not in the library path of operating system.</p>
+<p>To resolve this issue, run the following commands:</p>
+<div class="highlight-c++"><div class="highlight"><pre>sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist # this creates the locate database if it does not exist
+
+locate libgomp.dylib #copy the path which is generated by this command, say path1
+
+ln -s path1 /usr/local/lib/libgomp.dylib
+</pre></div>
+</div>
+<p>then run <code class="docutils literal"><span class="pre">make</span> <span class="pre">-j4</span></code> again.</p>
+</div>
+<div class="section" id="building-on-windows">
+<span id="building-on-windows"></span><h3>Building on Windows<a class="headerlink" href="#building-on-windows" title="Permalink to this headline">¶</a></h3>
+<p>Firstly, we should make your Visual Studio 2013 support more C++11 features.</p>
+<ul class="simple">
+<li>Download and install <a class="reference external" href="http://www.microsoft.com/en-us/download/details.aspx?id=41151">Visual C++ Compiler Nov 2013 CTP</a>.</li>
+<li>Copy all files in <code class="docutils literal"><span class="pre">C:\Program</span> <span class="pre">Files</span> <span class="pre">(x86)\Microsoft</span> <span class="pre">Visual</span> <span class="pre">C++</span> <span class="pre">Compiler</span> <span class="pre">Nov</span> <span class="pre">2013</span> <span class="pre">CTP</span></code> (or the folder where you extracted the zip archive) to <code class="docutils literal"><span class="pre">C:\Program</span> <span class="pre">Files</span> <span class="pre">(x86)\Microsoft</span> <span class="pre">Visual</span> <span class="pre">Studio</span> <span class="pre">12.0\VC</span></code> and overwrite all existed files. Don&#8217;t forget to backup the original files before copying.</li>
+</ul>
+<p>Secondly, fetch the third-party libraries, including <a class="reference external" href="http://sourceforge.net/projects/opencvlibrary/files/opencv-win/3.0.0/opencv-3.0.0.exe/download">OpenCV</a>, <a class="reference external" href="https://developer.nvidia.com/cudnn">CuDNN</a> and <a class="reference external" href="http://sourceforge.net/projects/openblas/files/v0.2.14/">OpenBlas</a>(ignore this if you have MKL).</p>
+<ul class="simple">
+<li>NOTICE: You need to register as a NVIDIA community user to get the download link of CuDNN.</li>
+</ul>
+<p>Finally, use CMake to create a Visual Studio solution in <code class="docutils literal"><span class="pre">./build/</span></code>. During configuration, you may need to set the path of each third-party library, until no error is reported. Open the solution and compile, you will get a <code class="docutils literal"><span class="pre">mxnet.dll</span></code> in <code class="docutils literal"><span class="pre">./build/Release</span></code> or <code class="docutils literal"><span class="pre">./build/Debug</span></code>.</p>
+</div>
+<div class="section" id="installing-pre-built-packages-on-windows">
+<span id="installing-pre-built-packages-on-windows"></span><h3>Installing pre-built packages on Windows<a class="headerlink" href="#installing-pre-built-packages-on-windows" title="Permalink to this headline">¶</a></h3>
+<p>Mxnet also provides pre-built packages on Windows. The pre-built package includes pre-build MxNet library, the dependent thrid-party libraries, a sample C++ solution in Visual Studio and the Python install script.</p>
+<p>You can download the packages from the <a class="reference external" href="https://github.com/dmlc/mxnet/releases">Releases tab</a> of MxNet. There are two variants provided: one with GPU support (using CUDA and CUDNN v3) and one without GPU support. You can choose one that fits your hardward configuration.</p>
+<p>After download, unpack the package into a folder, say D:\MxNet, then install the package by double clicking the setupenv.cmd inside the folder. It will setup environmental variables needed by MxNet. After that, you should be able to usee the provided VS solution to build C++ programs, or to <a class="reference external" href="#python-package-installation">install Python package</a>.</p>
+</div>
+<div class="section" id="customized-building">
+<span id="customized-building"></span><h3>Customized Building<a class="headerlink" href="#customized-building" title="Permalink to this headline">¶</a></h3>
+<p>The configuration of mxnet can be modified by <code class="docutils literal"><span class="pre">config.mk</span></code></p>
+<ul class="simple">
+<li>modify the compiling options such as compilers, CUDA, CUDNN, Intel MKL,
+various distributed filesystem such as HDFS/Amazon S3/...</li>
+<li>First copy <a class="reference external" href="../make/config.mk">make/config.mk</a> to the project root, on which
+any local modification will be ignored by git, then modify the according flags.</li>
+</ul>
+<div class="section" id="building-with-intel-mkl-support">
+<span id="building-with-intel-mkl-support"></span><h4>Building with Intel MKL Support<a class="headerlink" href="#building-with-intel-mkl-support" title="Permalink to this headline">¶</a></h4>
+<p>First, <code class="docutils literal"><span class="pre">source</span> <span class="pre">/path/to/intel/bin/compilervars.sh</span></code> to automatically set environment variables. Then, edit <a class="reference external" href="../make/config.mk">make/config.mk</a>, let <code class="docutils literal"><span class="pre">USE_BLAS</span> <span class="pre">=</span> <span class="pre">mkl</span></code>. <code class="docutils literal"><span class="pre">USE_INTEL_PATH</span> <span class="pre">=</span> <span class="pre">NONE</span></code> is usually not necessary to be modified.</p>
+</div>
+</div>
+</div>
+<div class="section" id="python-package-installation">
+<span id="python-package-installation"></span><h2>Python Package Installation<a class="headerlink" href="#python-package-installation" title="Permalink to this headline">¶</a></h2>
+<p>The python package is located at <a class="reference external" href="../python/mxnet">python/mxnet</a>. It requires
+<code class="docutils literal"><span class="pre">python&gt;=2.7</span></code> and <code class="docutils literal"><span class="pre">numpy</span></code>. To install the latter, if <code class="docutils literal"><span class="pre">pip</span></code> is available, then</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo pip install numpy
+</pre></div>
+</div>
+<p>otherwise use your package manager, e.g.</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get install python-numpy <span class="c"># for debian</span>
+sudo yum install python-numpy <span class="c"># for redhat</span>
+</pre></div>
+</div>
+<p>To have a quick test of the python package, we can train
+a MLP on the mnist dataset:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python example/image-classification/train_mnist.py
+</pre></div>
+</div>
+<p>or train a convolution neural network using GPU 0 if we set <code class="docutils literal"><span class="pre">USE_CUDA=1</span></code> during
+compiling:</p>
+<div class="highlight-bash"><div class="highlight"><pre>python example/image-classification/train_mnist.py --network lenet --gpus 0
+</pre></div>
+</div>
+<p>There are several ways to install the package:</p>
+<ol>
+<li><p class="first">Install system-widely, which requires root permission</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd </span>python<span class="p">;</span> sudo python setup.py install
+</pre></div>
+</div>
+<p>You will however need Python <code class="docutils literal"><span class="pre">distutils</span></code> module for this to
+work. It is often part of the core python package or it can be installed using your
+package manager, e.g. in Debian use</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo apt-get install python-setuptools
+</pre></div>
+</div>
+</li>
+<li><p class="first">Only set the environment variable <code class="docutils literal"><span class="pre">PYTHONPATH</span></code> to tell python where to find
+the library. For example, assume we cloned <code class="docutils literal"><span class="pre">mxnet</span></code> on the home directory
+<code class="docutils literal"><span class="pre">~</span></code>. then we can added the following line in <code class="docutils literal"><span class="pre">~/.bashrc</span></code>
+It is <strong><em>recommended for developers</em></strong> who may change the codes. The changes will be immediately reflected once you pulled the code and rebuild the project (no need to call <code class="docutils literal"><span class="pre">setup</span></code> again)</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span>~/mxnet/python
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install only for the current user.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd </span>python<span class="p">;</span> python setup.py develop --user
+</pre></div>
+</div>
+</li>
+<li><p class="first">Copy the package into the working directory which contains the mxnet
+application programs. In this approach we don&#8217;t need to change the system,
+and therefore is recommended for distributed training.</p>
+<p>Assume we are on the working directory, and <code class="docutils literal"><span class="pre">mxnet</span></code> is cloned on the home
+directory <code class="docutils literal"><span class="pre">~</span></code>.</p>
+<div class="highlight-bash"><div class="highlight"><pre>cp -r ~/mxnet/python/mxnet .
+cp ~/mxnet/lib/libmxnet.so mxnet/
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="r-package-installation">
+<span id="r-package-installation"></span><h2>R Package Installation<a class="headerlink" href="#r-package-installation" title="Permalink to this headline">¶</a></h2>
+<p>For Windows/Mac users, we provide pre-built binary package using CPU.
+You can install weekly updated package directly in R console:</p>
+<div class="highlight-r"><div class="highlight"><pre>install.packages<span class="p">(</span><span class="s">&quot;drat&quot;</span><span class="p">,</span> repos<span class="o">=</span><span class="s">&quot;https://cran.rstudio.com&quot;</span><span class="p">)</span>
+drat<span class="o">:::</span>addRepo<span class="p">(</span><span class="s">&quot;dmlc&quot;</span><span class="p">)</span>
+install.packages<span class="p">(</span><span class="s">&quot;mxnet&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To install the R package. First finish the <a class="reference external" href="#build-mxnet-library">Build MXNet Library</a> step.
+Then use the following command to install dependencies and build the package at root folder</p>
+<div class="highlight-bash"><div class="highlight"><pre>Rscript -e <span class="s2">&quot;install.packages(&#39;devtools&#39;, repo = &#39;https://cran.rstudio.com&#39;)&quot;</span>
+<span class="nb">cd </span>R-package
+Rscript -e <span class="s2">&quot;library(devtools); library(methods); options(repos=c(CRAN=&#39;https://cran.rstudio.com&#39;)); install_deps(dependencies = TRUE)&quot;</span>
+<span class="nb">cd</span> ..
+make rpkg
+</pre></div>
+</div>
+<p>Now you should have the R package as a tar.gz file and you can install it as a normal package by (the version number might be different)</p>
+<div class="highlight-bash"><div class="highlight"><pre>R CMD INSTALL mxnet_0.5.tar.gz
+</pre></div>
+</div>
+<p>Note on Library Build:</p>
+<p>We isolate the library build with Rcpp end to maximize the portability</p>
+<ul class="simple">
+<li>MSVC is needed on windows to build the mxnet library, because of CUDA compatiblity issue of toolchains.</li>
+</ul>
+</div>
+<div class="section" id="docker-images">
+<span id="docker-images"></span><h2>Docker Images<a class="headerlink" href="#docker-images" title="Permalink to this headline">¶</a></h2>
+<p>Builds of MXNet are available as <a class="reference external" href="https://www.docker.com/whatisdocker">Docker</a> images:
+<a class="reference external" href="https://hub.docker.com/r/kaixhin/mxnet/">MXNet Docker (CPU)</a> or <a class="reference external" href="https://hub.docker.com/r/kaixhin/cuda-mxnet/">MXNet Docker (CUDA)</a>.
+These are updated on a weekly basis with the latest builds of MXNet. Examples of running bash in a Docker container
+are as follows:</p>
+<div class="highlight-bash"><div class="highlight"><pre>sudo docker run -it kaixhin/mxnet
+sudo docker run -it --device /dev/nvidiactl --device /dev/nvidia-uvm --device /dev/nvidia0 kaixhin/cuda-mxnet:7.0
+</pre></div>
+</div>
+<p>For a guide to Docker, see the <a class="reference external" href="https://docs.docker.com/userguide/">official docs</a>. For more details on how to use the
+MXNet Docker images, including requirements for CUDA support, consult the <a class="reference external" href="https://github.com/Kaixhin/dockerfiles">source project</a>.</p>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, mxnet developers.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+
+<script src="_static/bootstrap.min.js"></script>
+
+  </body>
+</html>

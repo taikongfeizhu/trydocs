@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Environment Variables &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/breathe.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="mxnet">
+<meta name="keywords" content="mxnet">
+<meta name="author" content="mxnet">
+<link rel="stylesheet" href="_static/cppformat.css">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-20116650-4', 'cppformat.github.io');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body role="document">
+<nav class="navbar navbar-inverse">
+  <div class="tb-container">
+    <div class="row">
+      <div class="navbar-content">
+        
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">MXnet</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                 aria-expanded="false"> <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="http://cppformat.github.io/2.0.0/">2.0.0</a></li>
+                <li><a href="http://cppformat.github.io/1.1.0/">1.1.0</a></li>
+                <li><a href="http://cppformat.github.io/1.0.0/">1.0.0</a></li>
+              </ul>
+            </li>
+            
+              
+              <li>
+                <a href="">Contents</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Usage</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">API</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Syntax</a>
+              </li>
+              
+            
+          </ul>
+          
+            
+<form class="navbar-form navbar-right" role="search" action="search.html" method="get">
+  <div class="form-group">
+    <input type="text" name="q" class="form-control" placeholder="Search" >
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
+</form>
+          
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</nav>
+
+
+
+<div class="tb-container">
+  <div class="row">
+    
+
+    <div class="content">
+      
+  <div class="section" id="environment-variables">
+<span id="environment-variables"></span><h1>Environment Variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">¶</a></h1>
+<p>MXNet have several settings that can be changed via environment variable.
+Usually you do not need to change these settings, but they are listed here for reference.</p>
+<ul class="simple">
+<li>MXNET_GPU_WORKER_NTHREADS (default=2)<ul>
+<li>Maximum number of threads that do the computation job on each GPU.</li>
+</ul>
+</li>
+<li>MXNET_GPU_COPY_NTHREADS (default=1)<ul>
+<li>Maximum number of threads that do memory copy job on each GPU.</li>
+</ul>
+</li>
+<li>MXNET_CPU_WORKER_NTHREADS (default=1)<ul>
+<li>Maximum number of threads that do the CPU computation job.</li>
+</ul>
+</li>
+<li>MXNET_CPU_PRIORITY_NTHREADS (default=4)<ul>
+<li>Number of threads given to prioritized CPU jobs.</li>
+</ul>
+</li>
+<li>MXNET_EXEC_ENABLE_INPLACE (default=true)<ul>
+<li>Whether to enable inplace optimization in symbolic execution.</li>
+</ul>
+</li>
+<li>MXNET_EXEC_MATCH_RANGE (default=10)<ul>
+<li>The rough matching scale in symbolic execution memory allocator.</li>
+<li>Set this to 0 if we do not want to enable memory sharing between graph nodes(for debug purpose).</li>
+</ul>
+</li>
+<li>MXNET_EXEC_NUM_TEMP (default=1)<ul>
+<li>Maximum number of temp workspace we can allocate to each device.</li>
+<li>Set this to small number can save GPU memory.</li>
+<li>It will also likely to decrease level of parallelism, which is usually OK.</li>
+</ul>
+</li>
+<li>MXNET_ENGINE_TYPE (default=ThreadedEnginePerDevice)<ul>
+<li>The type of underlying execution engine of MXNet.</li>
+<li>List of choices<ul>
+<li>NaiveEngine: very simple engine that use master thread to do computation.</li>
+<li>ThreadedEngine: a threaded engine that uses global thread pool to schedule jobs.</li>
+<li>ThreadedEnginePerDevice: a threaded engine that allocates thread per GPU.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>MXNET_KVSTORE_REDUCTION_NTHREADS (default=4)<ul>
+<li>Number of threads used for summing of big arrays.</li>
+</ul>
+</li>
+<li>MXNET_KVSTORE_BIGARRAY_BOUND (default=1e6)<ul>
+<li>The minimum size of &#8220;big array&#8221;.</li>
+<li>When the array size is bigger than this threshold, MXNET_KVSTORE_REDUCTION_NTHREADS threads will be used for reduction.</li>
+</ul>
+</li>
+</ul>
+<div class="section" id="settings-for-minimum-memory-usage">
+<span id="settings-for-minimum-memory-usage"></span><h2>Settings for Minimum Memory Usage<a class="headerlink" href="#settings-for-minimum-memory-usage" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Make sure <code class="docutils literal"><span class="pre">min(MXNET_EXEC_NUM_TEMP,</span> <span class="pre">MXNET_GPU_WORKER_NTHREADS)</span> <span class="pre">=</span> <span class="pre">1</span></code><ul>
+<li>The default setting satisfies this.</li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="settings-for-more-gpu-parallelism">
+<span id="settings-for-more-gpu-parallelism"></span><h2>Settings for More GPU Parallelism<a class="headerlink" href="#settings-for-more-gpu-parallelism" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Set <code class="docutils literal"><span class="pre">MXNET_GPU_WORKER_NTHREADS</span></code> to larger number (e.g. 2)<ul>
+<li>You may want to set <code class="docutils literal"><span class="pre">MXNET_EXEC_NUM_TEMP</span></code> to reduce memory usage.</li>
+</ul>
+</li>
+<li>This may not speed things up, especially for image applications, because GPU is usually fully utilized even with serialized jobs.</li>
+</ul>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, mxnet developers.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+
+<script src="_static/bootstrap.min.js"></script>
+
+  </body>
+</html>

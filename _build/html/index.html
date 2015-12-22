@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>MXNet Documentation &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/breathe.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="mxnet">
+<meta name="keywords" content="mxnet">
+<meta name="author" content="mxnet">
+<link rel="stylesheet" href="_static/cppformat.css">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-20116650-4', 'cppformat.github.io');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body role="document">
+<nav class="navbar navbar-inverse">
+  <div class="tb-container">
+    <div class="row">
+      <div class="navbar-content">
+        
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">MXnet</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                 aria-expanded="false"> <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="http://cppformat.github.io/2.0.0/">2.0.0</a></li>
+                <li><a href="http://cppformat.github.io/1.1.0/">1.1.0</a></li>
+                <li><a href="http://cppformat.github.io/1.0.0/">1.0.0</a></li>
+              </ul>
+            </li>
+            
+              
+              <li>
+                <a href="">Contents</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Usage</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">API</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Syntax</a>
+              </li>
+              
+            
+          </ul>
+          
+            
+<form class="navbar-form navbar-right" role="search" action="search.html" method="get">
+  <div class="form-group">
+    <input type="text" name="q" class="form-control" placeholder="Search" >
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
+</form>
+          
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</nav>
+
+<div class="jumbotron">
+  <div class="tb-container">
+    <h1>mxnet</h1>
+    <p class="lead">Descripts</p>
+<!--     <div class="btn-group" role="group">
+      <a class="btn btn-success"
+          href="https://github.com/cppformat/cppformat/releases/download/2.0.0/cppformat-2.0.0.zip">
+            <span class="glyphicon glyphicon-download"></span> Download
+      </a>
+      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li><a href="https://github.com/cppformat/cppformat/releases/download/2.0.0/cppformat-2.0.0.zip">Version 2.0.0</a></li>
+        <li><a href="https://github.com/cppformat/cppformat/releases/download/1.1.0/cppformat-1.1.0.zip">Version 1.1.0</a></li>
+        <li><a href="https://github.com/cppformat/cppformat/releases/download/1.0.0/cppformat-1.0.0.zip">Version 1.0.0</a></li>
+      </ul>
+    </div> -->
+  </div>
+</div>
+
+
+
+<div class="tb-container">
+  <div class="row">
+    
+
+    <div class="content">
+      
+  <div class="section" id="mxnet-documentation">
+<span id="mxnet-documentation"></span><h1>MXNet Documentation<a class="headerlink" href="#mxnet-documentation" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://github.com/dmlc/mxnet">MXNet</a> is a deep learning framework designed for both <em>efficiency</em> and <em>flexibility</em>.
+It allows you to mix the flavours of deep learning programs together to maximize the efficiency and your productivity.</p>
+<div class="section" id="user-guide">
+<span id="user-guide"></span><h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="build.md">Build and Installation</a></li>
+<li><a class="reference external" href="python/index.md">Python Package Document</a></li>
+<li><a class="reference external" href="R-package/index.md">R Package Document</a></li>
+<li><a class="reference external" href="https://github.com/dmlc/MXNet.jl">MXNet.jl Julia Package</a></li>
+<li><a class="reference external" href="pretrained.md">Pretrained Model Gallery</a></li>
+<li><a class="reference external" href="distributed_training.md">Distributed Training</a></li>
+<li><a class="reference external" href="faq.md">Frequently Asked Questions</a></li>
+<li><a class="reference external" href="overview_zh.md">MXNet Overview in Chinese</a></li>
+</ul>
+</div>
+<div class="section" id="developer-guide">
+<span id="developer-guide"></span><h2>Developer Guide<a class="headerlink" href="#developer-guide" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="developer-guide/index.md">Developer Documents</a></li>
+<li><a class="reference external" href="env_var.md">Environment Variables for MXNet</a></li>
+<li><a class="reference external" href="contribute.md">Contributor Guideline</a></li>
+<li><a class="reference external" href="https://mxnet.readthedocs.org/en/latest/doxygen">Doxygen Version of C++ API</a></li>
+</ul>
+</div>
+<div class="section" id="open-source-design-notes">
+<span id="open-source-design-notes"></span><h2>Open Source Design Notes<a class="headerlink" href="#open-source-design-notes" title="Permalink to this headline">¶</a></h2>
+<p>This section contains the design document and notes we made for mxnet system design and deep learning
+libraries in general. We believe that open sourcing the system design note can letgeneral audiences understand the  motivations and the benefits drawbacks of design choices, and help those who uses deep learning and who builds deep learning systems.</p>
+<p>This section will be updated with self-contained design notes on various aspect of deep learning systems,
+in terms of abstraction, optimization and trade-offs.</p>
+<ul class="simple">
+<li><a class="reference external" href="program_model.md">Programming Models for Deep Learning</a></li>
+<li><a class="reference external" href="developer-guide/note_engine.md">Dependency Engine for Deep Learning</a></li>
+<li><a class="reference external" href="developer-guide/note_memory.md">Squeeze the Memory Consumption of Deep Learning</a></li>
+<li><a class="reference external" href="developer-guide/note_data_loading.md">Efficient Data Loading Module for Deep Learning</a></li>
+</ul>
+</div>
+<div class="section" id="tutorial">
+<span id="tutorial"></span><h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="tutorial/imagenet_full.md">Training Deep Net on 14 Million Images on A Single Machine</a></li>
+<li><a class="reference external" href="tutorial/new_op_howto.md">How to Create New Operations (Layers)</a></li>
+<li><a class="reference external" href="tutorial/smart_device.md">Deep Learning in a Single File for Smart Devices</a></li>
+</ul>
+</div>
+<div class="section" id="indices-and-tables">
+<span id="indices-and-tables"></span><h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-eval_rst"><div class="highlight"><pre>* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+</pre></div>
+</div>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, mxnet developers.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+
+<script src="_static/bootstrap.min.js"></script>
+
+  </body>
+</html>

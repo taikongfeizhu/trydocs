@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    
+    <title>Frequently Asked Questions &mdash; mxnet  documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/breathe.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<meta name="description" content="mxnet">
+<meta name="keywords" content="mxnet">
+<meta name="author" content="mxnet">
+<link rel="stylesheet" href="_static/cppformat.css">
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-20116650-4', 'cppformat.github.io');
+  ga('send', 'pageview');
+</script>
+
+  </head>
+  <body role="document">
+<nav class="navbar navbar-inverse">
+  <div class="tb-container">
+    <div class="row">
+      <div class="navbar-content">
+        
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html">MXnet</a>
+        </div>
+
+        
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                 aria-expanded="false"> <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="http://cppformat.github.io/2.0.0/">2.0.0</a></li>
+                <li><a href="http://cppformat.github.io/1.1.0/">1.1.0</a></li>
+                <li><a href="http://cppformat.github.io/1.0.0/">1.0.0</a></li>
+              </ul>
+            </li>
+            
+              
+              <li>
+                <a href="">Contents</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Usage</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">API</a>
+              </li>
+              
+            
+              
+              <li>
+                <a href="">Syntax</a>
+              </li>
+              
+            
+          </ul>
+          
+            
+<form class="navbar-form navbar-right" role="search" action="search.html" method="get">
+  <div class="form-group">
+    <input type="text" name="q" class="form-control" placeholder="Search" >
+  </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+  
+</form>
+          
+        </div> 
+      </div> 
+    </div> 
+  </div> 
+</nav>
+
+
+
+<div class="tb-container">
+  <div class="row">
+    
+
+    <div class="content">
+      
+  <div class="section" id="frequently-asked-questions">
+<span id="frequently-asked-questions"></span><h1>Frequently Asked Questions<a class="headerlink" href="#frequently-asked-questions" title="Permalink to this headline">¶</a></h1>
+<p>This document contains the frequently asked questions to mxnet.</p>
+<div class="section" id="how-to-copy-part-of-parameters-to-another-model">
+<span id="how-to-copy-part-of-parameters-to-another-model"></span><h2>How to Copy Part of Parameters to Another Model<a class="headerlink" href="#how-to-copy-part-of-parameters-to-another-model" title="Permalink to this headline">¶</a></h2>
+<p>Most MXNet&#8217;s model consists two parts, the argument arrays and symbol. You can simply copy the argument arrary to the argument array of another model. For example, in python model API, you can do</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">copied_model</span> <span class="o">=</span>  <span class="n">mx</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">FeedForward</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="n">mx</span><span class="o">.</span><span class="n">gpu</span><span class="p">(),</span> <span class="n">symbol</span><span class="o">=</span><span class="n">new_symbol</span><span class="p">,</span>
+                                     <span class="n">arg_params</span><span class="o">=</span><span class="n">old_arg_params</span><span class="p">,</span> <span class="n">aux_params</span><span class="o">=</span><span class="n">old_aux_params</span><span class="p">,</span>
+                                     <span class="n">allow_extra_params</span><span class="o">=</span><span class="bp">True</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To copy model parameter from existing <code class="docutils literal"><span class="pre">old_arg_params</span></code>, see also this <a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/example/notebooks/predict-with-pretrained-model.ipynb">notebook</a></p>
+</div>
+<div class="section" id="how-to-extrat-feature-map-of-certain-layer">
+<span id="how-to-extrat-feature-map-of-certain-layer"></span><h2>How to Extrat Feature Map of Certain Layer<a class="headerlink" href="#how-to-extrat-feature-map-of-certain-layer" title="Permalink to this headline">¶</a></h2>
+<p>See this <a class="reference external" href="https://github.com/dmlc/mxnet/blob/master/example/notebooks/predict-with-pretrained-model.ipynb">notebook</a></p>
+</div>
+<div class="section" id="what-is-the-relation-between-mxnet-and-cxxnet-minerva-purine2">
+<span id="what-is-the-relation-between-mxnet-and-cxxnet-minerva-purine2"></span><h2>What is the relation between MXNet and CXXNet, Minerva, Purine2<a class="headerlink" href="#what-is-the-relation-between-mxnet-and-cxxnet-minerva-purine2" title="Permalink to this headline">¶</a></h2>
+<p>MXNet is created in collaboration by authors from the three projects.
+The project reflects what we have learnt from the past projects.
+It combines important flavour of the existing projects, being
+efficient, flexible and memory efficient.</p>
+<p>It also contains new ideas, that allows user to combine different
+ways of programming, and write CPU/GPU applications that are more
+memory efficient than cxxnet, purine and more flexible than minerva.</p>
+</div>
+<div class="section" id="what-is-the-relation-to-tensorflow">
+<span id="what-is-the-relation-to-tensorflow"></span><h2>What is the Relation to Tensorflow<a class="headerlink" href="#what-is-the-relation-to-tensorflow" title="Permalink to this headline">¶</a></h2>
+<p>Both MXNet and Tensorflow use a computation graph abstraction, which is initially used by Theano, then also adopted by other packages such as CGT, caffe2, purine. Currently TensorFlow adopts an optimized symbolic API. While mxnet supports a more <a class="reference external" href="https://mxnet.readthedocs.org/en/latest/program_model.html">mixed flavor</a>, with a dynamic dependency scheduler to combine symbolic and imperative programming together.
+In short, mxnet is lightweight and “mixed”, with flexiblity from imperative programing, while getting similar advantages by using a computation graph to make it very fast and memory efficient. That being said, most systems will involve and we expect both systems can learn and benefit from each other.</p>
+</div>
+<div class="section" id="how-to-build-the-project">
+<span id="how-to-build-the-project"></span><h2>How to Build the Project<a class="headerlink" href="#how-to-build-the-project" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="build.md">build instruction</a></p>
+</div>
+</div>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, mxnet developers.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+
+<script src="_static/bootstrap.min.js"></script>
+
+  </body>
+</html>
