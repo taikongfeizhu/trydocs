@@ -34,7 +34,7 @@
     function will automatically search for all of the words. Pages
     containing fewer words won't appear in the result list.{% endtrans %}
   </p>
-  {{ searchform('form-inline', True) }}
+
   {% if search_performed %}
     <h2>{{ _('Search Results') }}</h2>
     {% if not search_results %}
